@@ -132,7 +132,7 @@ fun PantallaTienda(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Contactanos",
+                            text = "Contactanosssss",
                             color = CafeTexto,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
