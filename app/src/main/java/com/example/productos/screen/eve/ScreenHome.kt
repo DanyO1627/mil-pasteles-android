@@ -125,6 +125,22 @@ fun PantallaTienda(
                             }
                         )
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Contactanos",
+                            color = CafeTexto,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.clickable {
+                                navController.navigate("contacto")
+                            }
+                        )
+                    }
                 }
             }
 
