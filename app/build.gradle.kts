@@ -42,6 +42,21 @@ android {
 
 dependencies {
 
+    // Retrofit y Gson (ya las debes tener)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // ✅ AGREGAR ESTA LÍNEA para logs HTTP
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+// Convertidor JSON → objeto Kotlin
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+// Coroutines (Retrofit usa suspend functions)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
     // para algunas animaciones (hay unas en navegacion)
     implementation("com.google.accompanist:accompanist-navigation-animation:0.36.0")
 
@@ -108,6 +123,7 @@ dependencies {
     // ===== Material Icons extendidos (alineados con BOM) =====
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.ui)
 
     // dependencias para la base de datos (clase 17-10-25)
     // ===== Room (solo KSP, sin annotationProcessor) =====

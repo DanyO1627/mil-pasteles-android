@@ -13,5 +13,5 @@ data class BoletaData(
     val subtotal: Int,
     val envio: Int,
     val total: Int,
-    val TEMPORAL: Int
+
 )

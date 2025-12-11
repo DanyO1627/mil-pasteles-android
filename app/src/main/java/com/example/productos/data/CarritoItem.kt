@@ -1,9 +1,9 @@
 package com.example.productos.data
 
 data class CarritoItem(
-    val id: Int, // mismo id del producto
+    val id: Long,
     val nombre: String,
-    val precio: Int,
-    val imagen: Int,
+    val precio: Double,
+    val imagenUrl: String?,
     val cantidad: Int
 )

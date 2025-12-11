@@ -1,11 +1,3 @@
-
-// qué hace el código:
-//Lee el producto seleccionado desde el ViewModel
-//Muestra su imagen, nombre, precio y descripción
-//Incluye botones + y – para elegir cantidad
-//Botón Agregar al carro (provisoriamente hace un sout)
-// puede volver atrás con el ícono del menú superior.
-
 package com.example.productos.screen
 
 import androidx.compose.foundation.Image
@@ -29,11 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.productos.ui.utils.vibrarSuave
 import com.example.productos.viewmodel.ProductoViewModel
 import com.example.productos.viewmodel.CarritoViewModel
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,27 +34,26 @@ fun ScreenDetalleProducto(
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel
 ) {
-    // Contexto y vibración
+    // vibración suave
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    fun triggerHapticFeedbackSuave() {
+    fun vibrar() {
         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-        vibrarSuave(context) // VIBRA AL AGREGAR
+        vibrarSuave(context)
     }
 
     // el producto seleccionado
     val productoSeleccionado by viewModel.productoSeleccionado.collectAsState()
 
     if (productoSeleccionado == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("No se ha encontrado el producto indicado", color = Color.Gray)
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No se encontró el producto 😢", color = Color.Gray)
         }
         return
     }
+
+    val producto = productoSeleccionado!!
 
     var cantidad by remember { mutableStateOf(1) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -74,131 +65,116 @@ fun ScreenDetalleProducto(
             TopAppBar(
                 title = {
                     Text(
-                        text = productoSeleccionado!!.nombre,
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        text = producto.nombreProducto,
+                        fontWeight = FontWeight.Bold,
                         color = Color(0xFF4E342E)
                     )
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFFFFA6B8)
-                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            painter = painterResource(id = android.R.drawable.ic_menu_revert),
+                            painterResource(id = android.R.drawable.ic_menu_revert),
                             contentDescription = "Volver",
                             tint = Color(0xFF4E342E)
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = Color(0xFFFFA6B8)
+                )
             )
         },
 
         bottomBar = {
-            val stockDisponible = productoSeleccionado!!.stock // producto seleccionado
-            val scope = rememberCoroutineScope()
-            var scale by remember { mutableStateOf(1f) } // PARA ANIMACIÓN DE REBOTE DEL BOTÓN
+            val stockDisponible = producto.stock
+            var scale by remember { mutableStateOf(1f) }
 
             Button(
                 onClick = {
+                    vibrar()
 
-                    // VIBRACIÓN Y ANIMACIÓN DE REBOTE
-                    vibrarSuave(context)
-                    scale = 0.9f // achica el botón
-
-                    // después del tiempo vuelve a ser normal
+                    // animación botón
+                    scale = 0.9f
                     scope.launch {
                         kotlinx.coroutines.delay(100)
                         scale = 1f
                     }
 
-                    // agrega productos al carro
+                    // agregar al carrito
                     repeat(cantidad) {
-                        carritoViewModel.agregarAlCarrito(productoSeleccionado!!)
+                        carritoViewModel.agregarAlCarrito(producto)
                     }
 
-                    // refresca stock
-                    val actualizado = viewModel.obtenerProductoPorId(productoSeleccionado!!.id)
-                    viewModel.seleccionarProducto(actualizado?.id ?: productoSeleccionado!!.id)
-                    // 🎉 snackbar
+                    // recargar el mismo producto desde backend
+                    producto.id?.let { viewModel.seleccionarProducto(it) }
+
+                    // mensaje
                     scope.launch {
                         snackbarHostState.showSnackbar("Agregado al carrito 🛒")
                     }
-                    println("✅ Agregado al carrito: ${productoSeleccionado!!.nombre} x$cantidad")
                 },
-
-                // boton
-                enabled = stockDisponible > 0, // si no hay más stock se frena
+                enabled = stockDisponible > 0,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .height(55.dp)
-                    .graphicsLayer( // aplica efecto del botón
-                        scaleX = scale,
-                        scaleY = scale
-                    ),
+                    .graphicsLayer(scaleX = scale, scaleY = scale),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (stockDisponible > 0)
-                        Color(0xFFE57373) // color normal si hay stock
-                    else
-                        Color.LightGray // gris si no hay
-                ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-            ) {
-                Text(
-                    text = if (stockDisponible > 0)
-                        "🛒 Agregar al carrito"
-                    else
-                        "Sin stock",
-                    color = Color.White
+                    containerColor = if (stockDisponible > 0) Color(0xFFE57373) else Color.LightGray,
+                    contentColor = Color.White
                 )
+            ) {
+                Text(if (stockDisponible > 0) "🛒 Agregar al carrito" else "Sin stock")
             }
         }
     ) { paddingValues ->
+
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            Modifier
                 .padding(paddingValues)
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .background(Color.White)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = productoSeleccionado!!.imagen),
-                contentDescription = productoSeleccionado!!.nombre,
+
+            // IMAGEN URL COIL
+            AsyncImage(
+                model = producto.imagenUrl,
+                contentDescription = producto.nombreProducto,
                 modifier = Modifier
-                    .height(315.dp)
-                    .aspectRatio(1f)
+                    .fillMaxWidth()
+                    .height(300.dp)
                     .clip(RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
             )
 
             Text(
-                text = productoSeleccionado!!.nombre,
+                text = producto.nombreProducto,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = Color(0xFF4E342E)
             )
 
             Text(
-                text = "$${productoSeleccionado!!.precio}",
+                text = "$${producto.precio.toInt()}",
                 style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFF6B3143))
             )
 
-            // muestra el stock actualizado
             Text(
-                text = "Stock disponible: ${productoSeleccionado!!.stock}",
+                text = "Stock disponible: ${producto.stock}",
                 style = MaterialTheme.typography.bodySmall,
-                color = if (productoSeleccionado!!.stock > 0) Color.Gray else Color.Red
+                color = if (producto.stock > 0) Color.Gray else Color.Red
             )
 
             Text(
-                text = productoSeleccionado!!.descripcionLarga,
+                text = producto.descripcionLarga,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.DarkGray
             )
 
+            // seleccionar cantidad
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -207,55 +183,24 @@ fun ScreenDetalleProducto(
                 Button(
                     onClick = { if (cantidad > 1) cantidad-- },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC1CC))
-                ) {
-                    Text("-", color = Color(0xFF4E342E))
-                }
+                ) { Text("-", color = Color(0xFF4E342E)) }
 
                 Text(
-                    text = cantidad.toString(),
-                    modifier = Modifier.padding(horizontal = 24.dp),
+                    cantidad.toString(),
+                    Modifier.padding(horizontal = 24.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                // desactiva el boton si ya no hay stock
                 Button(
-                    onClick = {
-                        if (cantidad < productoSeleccionado!!.stock) cantidad++
-                    },
-                    enabled = cantidad < productoSeleccionado!!.stock,
+                    onClick = { if (cantidad < producto.stock) cantidad++ },
+                    enabled = cantidad < producto.stock,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (cantidad < productoSeleccionado!!.stock)
-                            Color(0xFFFFC1CC)
-                        else
-                            Color.LightGray
+                        containerColor = if (cantidad < producto.stock) Color(0xFFFFC1CC) else Color.LightGray
                     )
-                ) {
-                    Text("+", color = Color(0xFF4E342E))
-                }
+                ) { Text("+", color = Color(0xFF4E342E)) }
             }
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(Modifier.height(60.dp))
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

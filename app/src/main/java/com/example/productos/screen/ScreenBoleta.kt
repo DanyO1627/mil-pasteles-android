@@ -1,6 +1,7 @@
 package com.example.productos.screen
 
 import androidx.compose.foundation.background
+import com.example.productos.ui.utils.formatearPrecio
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -217,7 +218,4 @@ fun ScreenBoleta(
     }
 }
 
-private fun formatearPrecio(monto: Int): String {
-    val conPuntos = "%,d".format(monto).replace(',', '.')
-    return "$$conPuntos"
-}
+

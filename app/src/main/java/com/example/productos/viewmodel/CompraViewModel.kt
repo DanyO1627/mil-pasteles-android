@@ -11,14 +11,11 @@ import java.util.Locale
 
 class CompraViewModel : ViewModel() {
 
-    // boleta generada en la última compra
     private val _boletaActual = MutableStateFlow<BoletaData?>(null)
     val boletaActual = _boletaActual.asStateFlow()
 
-    // contador simple para nro de boleta
     private var correlativo = 1
 
-    // genera y guarda la boleta en memoria
     fun generarBoleta(
         nombre: String,
         direccion: String,
@@ -29,7 +26,7 @@ class CompraViewModel : ViewModel() {
         items: List<CarritoItem>,
         envio: Int
     ) {
-        val subtotal = items.sumOf { it.precio * it.cantidad }
+        val subtotal = items.sumOf { (it.precio * it.cantidad).toInt() }
         val total = subtotal + envio
 
         val fecha = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
