@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 import com.example.productos.viewmodel.ProductoViewModel
 import com.example.productos.viewmodel.CarritoViewModel
-import com.example.productos.viewmodel.CarritoViewModelFactory
 import com.example.productos.screen.NavigationBarMain
 // ✨ NUEVOS IMPORTS PARA BACKEND
 import com.example.productos.remote.RetrofitInstance

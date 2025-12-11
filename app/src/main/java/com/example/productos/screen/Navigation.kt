@@ -171,9 +171,11 @@ fun AppNavHost(
         // detalle de cada producto
         composable(
             route = "detalle/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.IntType })
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("id")
+
+            val id = backStackEntry.arguments?.getLong("id")
+
             if (id != null) {
                 viewModel.seleccionarProducto(id)
                 ScreenDetalleProducto(
@@ -207,7 +209,9 @@ fun AppNavHost(
             route = "productos/{categoriaNombre}",
             arguments = listOf(navArgument("categoriaNombre") { type = NavType.StringType })
         ) { backStackEntry ->
+
             val categoriaNombre = backStackEntry.arguments?.getString("categoriaNombre") ?: ""
+
             ScreenProductosCategoria(
                 navController = navController,
                 viewModel = viewModel,
@@ -215,6 +219,7 @@ fun AppNavHost(
                 categoriaNombre = categoriaNombre
             )
         }
+
     }
 }
 

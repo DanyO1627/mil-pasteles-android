@@ -11,14 +11,11 @@ import java.util.Locale
 
 class CompraViewModel : ViewModel() {
 
-    // boleta generada en la última compra
     private val _boletaActual = MutableStateFlow<BoletaData?>(null)
     val boletaActual = _boletaActual.asStateFlow()
 
-    // contador simple para nro de boleta
     private var correlativo = 1
 
-    // genera y guarda la boleta en memoria
     fun generarBoleta(
         nombre: String,
         direccion: String,

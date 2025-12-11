@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Image  // ✨ NUEVO
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import com.example.productos.ui.utils.formatearPrecio
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import androidx.navigation.NavController
 import com.example.productos.data.CarritoItem
 import com.example.productos.viewmodel.CarritoViewModel
@@ -239,7 +241,7 @@ fun CarritoItemCard(
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragEnd = {
-                        if (offsetX < -150f) carritoViewModel.disminuirCantidad(item)
+                        if (offsetX < -150f) carritoViewModel.disminuirCantidad(item.copy(cantidad = 1))
                         offsetX = 0f
                     },
                     onDrag = { change, dragAmount ->
@@ -265,7 +267,6 @@ fun CarritoItemCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // ✨ SOLUCIÓN SIMPLE: AsyncImage con fondo de color
             AsyncImage(
                 model = item.imagenUrl,
                 contentDescription = item.nombre,
@@ -279,6 +280,8 @@ fun CarritoItemCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
+                Text(item.nombre, fontSize = 16.sp)
+                Text("Precio: ${formatearPrecio(item.precio)}")
 
                 Text(item.nombre, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text(
@@ -291,8 +294,10 @@ fun CarritoItemCard(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
 
                         IconButton(

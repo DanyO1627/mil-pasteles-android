@@ -1,11 +1,11 @@
 package com.example.productos.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import com.example.productos.ui.utils.formatearPrecio
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -18,51 +18,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.productos.R
-import com.example.productos.data.Producto
+import coil.compose.AsyncImage
 import com.example.productos.viewmodel.CarritoViewModel
 import com.example.productos.viewmodel.ProductoViewModel
 import kotlinx.coroutines.launch
 
 
-// LA TOPBAR
+// TOPBAR
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarProductos() {
-    // SEGÚN YO EN ESTOS MOEMNTOS NO ESTÁ OPERATIVO EL MENU
-    var menuAbierto by remember { mutableStateOf(false) }
-
-    // top bar caja
     TopAppBar(
         title = {
             Text(
                 "Nuestros productos",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF4E342E) // Café Oscuro (Brown 800) -  el color del texto
+                color = Color(0xFF4E342E)
             )
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color(0xFFFFA6B8) // ESTE ES EL ROSA PASTEL
-        ),
-        // SEGÚN YO EN ESTOS MOEMNTOS NO ESTÁ OPERATIVO EL MENU
         navigationIcon = {
-            IconButton(onClick = { menuAbierto = !menuAbierto }) {
+            IconButton(onClick = {}) {
                 Icon(Icons.Default.Menu, contentDescription = "Menú", tint = Color(0xFF4E342E))
             }
         },
         actions = {
-            IconButton(onClick = { /* ir a inicio si quieres */ }) { // estaba vacío, dejé un comentario de la acción
+            IconButton(onClick = {}) {
                 Icon(Icons.Default.Home, contentDescription = "Inicio", tint = Color(0xFF4E342E))
             }
-        }
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = Color(0xFFFFA6B8)
+        )
     )
 }
 
-// EL BUSCADOR
+// BUSCADOR
 @Composable
 fun BuscadorProductos(
     query: String,
@@ -74,69 +67,62 @@ fun BuscadorProductos(
         placeholder = { Text("Buscar producto...") },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
         singleLine = true,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface
-        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp) // tamaño del buscador
+            .padding(bottom = 12.dp)
     )
 }
 
-// LA LISTA DE PRODUCTOS
+
+// LISTA PRINCIPAL
 @Composable
 fun ScreenProductos(
     navController: NavController,
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel
 ) {
-    val productos by viewModel.listaProductos.collectAsState()
+    // carga los productos del backend a penas se entra a la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
+    val productos by viewModel.productos.collectAsState()
 
-    // guarda lo que escribe el usuario en el buscador
     var query by remember { mutableStateOf("") }
 
-    // luego filtra por eso
     val productosFiltrados =
-        if (query.isBlank()) productos else productos.filter { it.nombre.contains(query, true) } // usé 'true' en vez de 'ignoreCase = true' que es lo mismo
+        if (query.isBlank()) productos
+        else productos.filter { it.nombreProducto.contains(query, ignoreCase = true) }
 
-    // snackbar + scope
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = { TopBarProductos() },
-        snackbarHost = { SnackbarHost(snackbarHostState) } //  host para snackbars, para mostrar los mensajes
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
-        //  Column   para que toddo salga ordenado vertical
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color.White) // color del fondo
+                .background(Color.White)
                 .padding(16.dp)
         ) {
-            // buscador arriba de los productos
-            BuscadorProductos(query) { nuevoTexto -> query = nuevoTexto }
+            BuscadorProductos(query) { query = it }
 
-            // lista de productos filtrada
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(
-                    start = 8.dp, end = 8.dp, top = 8.dp, bottom = 80.dp // espacio extra para que los botones no se corten
-                ),
+                contentPadding = PaddingValues(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxSize() // importante, no fillMaxHeight
-                    .padding(bottom = 8.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(productosFiltrados) { producto ->
                     ProductoItem(
                         producto = producto,
                         navController = navController,
                         viewModel = viewModel,
-                        carritoViewModel = carritoViewModel, // para el carrito
+                        carritoViewModel = carritoViewModel,
                         onAgregado = {
                             scope.launch {
                                 snackbarHostState.showSnackbar("Agregado al carrito 🛒")
@@ -149,124 +135,100 @@ fun ScreenProductos(
     }
 }
 
-// LA TARJETA DE CADA PRODUCTO
+
+// TARJETA DE PRODUCTO
 @Composable
 fun ProductoItem(
-    producto: Producto,
+    producto: com.example.productos.model.Producto,
     navController: NavController,
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel,
-    onAgregado: () -> Unit // llama al mensaje (snackbar)
+    onAgregado: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxWidth()
             .height(340.dp),
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC1CC))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC1CC)),
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            //  SOLO la imagen será clickeable ahora
-            Image(
-                painter = painterResource(id = producto.imagen),
-                contentDescription = producto.nombre,
+
+            // IMAGEN DESDE URL (COIL)
+            AsyncImage(
+                model = producto.imagenUrl,
+                contentDescription = producto.nombreProducto,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(140.dp)
                     .clip(MaterialTheme.shapes.medium)
-                    .clickable { // click de detalle
+                    .clickable {
                         viewModel.seleccionarProducto(producto.id)
                         navController.navigate("detalle/${producto.id}")
-                    },
-                contentScale = ContentScale.Crop
+                    }
             )
-            // esto recorta la img para que rellene el espacio
 
-            // fondo de la tarjeta de cada producto
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    //.background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)) // esto le da un recuadro a la columna que contenía el nombre y el precio, pero feo
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = producto.nombre,
+                    text = producto.nombreProducto,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis, // esto para que si el nombre es muy largo la tarjeta se acomode
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
                 Text(
-                    text = viewModel.formatearPrecio(producto.precio),
+                    text = formatearPrecio(producto.precio),
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color(0xFF592D2D)
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(Modifier.height(4.dp))
 
-                // Row sirve como mini contenedor que te pone ttodo uno al lado del otro (cambiado a Column)
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Mostrar stock actual
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
                     Text(
                         text = "Stock: ${producto.stock}",
-                        style = MaterialTheme.typography.bodySmall,
                         color = if (producto.stock > 0) Color.Gray else Color.Red
                     )
 
-                    // Botón: Agregar al carrito
                     Button(
                         onClick = {
                             carritoViewModel.agregarAlCarrito(producto.id.toLong(),1)
                             onAgregado()
                         },
-                        enabled = producto.stock > 0, // 🔹 desactiva si no hay stock
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        shape = MaterialTheme.shapes.medium,
+                        enabled = producto.stock > 0,
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (producto.stock > 0) Color(0xFF592D2D) else Color.LightGray,
                             contentColor = Color.White
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+                        )
                     ) {
                         Text(if (producto.stock > 0) "Agregar 🛒" else "Sin stock")
                     }
 
-                    // Botón: Detalles
                     Button(
                         onClick = {
                             viewModel.seleccionarProducto(producto.id)
                             navController.navigate("detalle/${producto.id}")
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(38.dp),
-                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFFF8A9E),
                             contentColor = Color.White
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                        )
                     ) {
                         Text("Detalles")
                     }
                 }
-
-
-                Spacer(modifier = Modifier.height(8.dp)) //  espacio para que no se corte el boton
             }
         }
     }

@@ -1,8 +1,11 @@
 package com.example.productos.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import com.example.productos.ui.utils.formatearPrecio
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,11 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.productos.R
 import com.example.productos.data.CarritoItem
 import com.example.productos.ui.theme.CafeTexto
@@ -35,13 +40,16 @@ fun ScreenCompra(
     val lista by carritoViewModel.listaCarrito.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
+    //  datos del formulario
     var nombre by remember { mutableStateOf("") }
     var direccion by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
     var referencia by remember { mutableStateOf("") }
 
+    // dropdowns
     var expandedRegion by remember { mutableStateOf(false) }
     var expandedComuna by remember { mutableStateOf(false) }
 
@@ -207,6 +215,7 @@ fun ScreenCompra(
             contentPadding = PaddingValues(bottom = 50.dp)
         ) {
 
+            // ========== DATOS DEL ENVÍO ==============
             item {
                 DatosEnvioCard(
                     nombre = nombre, onNombre = { nombre = it },
@@ -223,10 +232,12 @@ fun ScreenCompra(
                 )
             }
 
+            // ========== TU PEDIDO ==============
             item {
                 TuPedidoCard(lista)
             }
 
+            // ========== METODO DE PAGO ==============
             item {
                 MetodoPagoCard(
                     metodos = metodos,
@@ -235,6 +246,7 @@ fun ScreenCompra(
                 )
             }
 
+            // ========== RESUMEN TOTAL ==============
             item {
                 ResumenCard(
                     subtotal = subtotal,
@@ -272,6 +284,9 @@ fun ScreenCompra(
     }
 }
 
+//////////////////////////////////////////////////////////
+// COMPONENTES
+//////////////////////////////////////////////////////////
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatosEnvioCard(
@@ -287,6 +302,7 @@ fun DatosEnvioCard(
     onExpandRegion: (Boolean) -> Unit,
     onExpandComuna: (Boolean) -> Unit
 ) {
+
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
