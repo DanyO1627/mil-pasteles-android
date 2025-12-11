@@ -1,6 +1,6 @@
 package com.example.productos.remote
 
-import com.example.productos.data.Producto
+import com.example.productos.model.Producto
 import com.example.productos.data.dto.AgregarItemRequestDto
 import com.example.productos.data.dto.CarritoResponseDto
 import retrofit2.Response

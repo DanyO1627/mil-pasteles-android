@@ -40,7 +40,7 @@ fun ScreenCompra(
     val lista by carritoViewModel.listaCarrito.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+
 
     //  datos del formulario
     var nombre by remember { mutableStateOf("") }

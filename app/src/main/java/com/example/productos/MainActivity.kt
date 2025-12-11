@@ -20,6 +20,7 @@ import com.example.productos.screen.NavigationBarMain
 // ✨ NUEVOS IMPORTS PARA BACKEND
 import com.example.productos.remote.RetrofitInstance
 import com.example.productos.repository.CarritoRepository
+import com.example.productos.viewmodel.CarritoViewModelFactory
 
 class MainActivity : ComponentActivity() {
     // ViewModels

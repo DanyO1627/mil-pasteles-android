@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.productos.ui.utils.vibrarFuerte
 import com.example.productos.ui.utils.vibrarSuave
 import com.example.productos.viewmodel.ProductoViewModel
 import com.example.productos.viewmodel.CarritoViewModel
@@ -93,11 +94,9 @@ fun ScreenDetalleProducto(
                             tint = Color(0xFF4E342E)
                         )
                     }
-                },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFFFFA6B8)
+                }
                 )
-            )
+
         },
 
         bottomBar = {
@@ -106,7 +105,7 @@ fun ScreenDetalleProducto(
 
             Button(
                 onClick = {
-                    vibrar()
+                    vibrarFuerte()
 
                     // animación botón
                     scale = 0.9f

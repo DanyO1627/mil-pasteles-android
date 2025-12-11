@@ -294,8 +294,8 @@ fun CarritoItemCard(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                    horizontalArrangement = Arrangement.SpaceBetween
+
                 ) {
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
