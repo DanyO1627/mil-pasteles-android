@@ -81,6 +81,10 @@ fun ScreenProductos(
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel
 ) {
+    // carga los productos del backend a penas se entra a la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
     val productos by viewModel.productos.collectAsState()
 
     var query by remember { mutableStateOf("") }

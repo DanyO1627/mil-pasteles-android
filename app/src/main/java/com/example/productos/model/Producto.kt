@@ -9,5 +9,6 @@ data class Producto(
     val descripcionLarga: String = "",
     val activo: Boolean? = true,
     val stock: Int = 0,
-    val categoria: Categoria? = null
+    val categoria: Categoria? = null,
+    val id_categoria: Long? = null
 )

@@ -207,9 +207,11 @@ fun AppNavHost(
         // productos filtrados por categoria
         composable(
             route = "productos/{categoriaNombre}",
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
+            arguments = listOf(navArgument("categoriaNombre") { type = NavType.StringType })
         ) { backStackEntry ->
+
             val categoriaNombre = backStackEntry.arguments?.getString("categoriaNombre") ?: ""
+
             ScreenProductosCategoria(
                 navController = navController,
                 viewModel = viewModel,
@@ -217,6 +219,7 @@ fun AppNavHost(
                 categoriaNombre = categoriaNombre
             )
         }
+
     }
 }
 

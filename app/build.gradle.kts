@@ -124,6 +124,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.runtime)
 
     // dependencias para la base de datos (clase 17-10-25)
     // ===== Room (solo KSP, sin annotationProcessor) =====
