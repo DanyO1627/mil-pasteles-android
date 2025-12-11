@@ -42,6 +42,28 @@ android {
 
 dependencies {
 
+    // Retrofit y Gson (ya las debes tener)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // DataStore para persistencia
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // ✅ AGREGAR ESTA LÍNEA para logs HTTP
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+
+    // Activity Compose
+    implementation("androidx.activity:activity-compose:1.9.0")
+
     // para algunas animaciones (hay unas en navegacion)
     implementation("com.google.accompanist:accompanist-navigation-animation:0.36.0")
 

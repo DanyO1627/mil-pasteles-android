@@ -29,7 +29,7 @@ class CompraViewModel : ViewModel() {
         items: List<CarritoItem>,
         envio: Int
     ) {
-        val subtotal = items.sumOf { it.precio * it.cantidad }
+        val subtotal = items.sumOf { it.precio * it.cantidad }.toInt()
         val total = subtotal + envio
 
         val fecha = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())

@@ -114,7 +114,7 @@ fun ScreenDetalleProducto(
 
                     // agrega productos al carro
                     repeat(cantidad) {
-                        carritoViewModel.agregarAlCarrito(productoSeleccionado!!)
+                        carritoViewModel.agregarAlCarrito(productoSeleccionado!!.id.toLong(),1)
                     }
 
                     // refresca stock

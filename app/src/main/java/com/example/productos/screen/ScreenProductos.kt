@@ -228,7 +228,7 @@ fun ProductoItem(
                     // Botón: Agregar al carrito
                     Button(
                         onClick = {
-                            carritoViewModel.agregarAlCarrito(producto)
+                            carritoViewModel.agregarAlCarrito(producto.id.toLong(),1)
                             onAgregado()
                         },
                         enabled = producto.stock > 0, // 🔹 desactiva si no hay stock

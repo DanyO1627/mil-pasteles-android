@@ -41,7 +41,7 @@ fun ScreenProductosCategoria(
     fun agregarConStock(id: Int) {
         val p = viewModel.obtenerProductoPorId(id) ?: return
 
-        carritoViewModel.agregarAlCarrito(p)
+        carritoViewModel.agregarAlCarrito(p.id.toLong(),1)
 
         scope.launch {
             snackbarHostState.showSnackbar("Agregado al carrito 🛒")

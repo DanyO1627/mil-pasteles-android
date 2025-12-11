@@ -217,6 +217,12 @@ fun ScreenBoleta(
     }
 }
 
+private fun formatearPrecio(monto: Double): String {
+    val conPuntos = "%,.0f".format(monto).replace(',', '.')
+    return "$$conPuntos"
+}
+
+// Y mantener la versión Int:
 private fun formatearPrecio(monto: Int): String {
     val conPuntos = "%,d".format(monto).replace(',', '.')
     return "$$conPuntos"
