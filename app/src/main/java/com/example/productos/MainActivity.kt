@@ -36,8 +36,6 @@ class MainActivity : ComponentActivity() {
             "pk.eyJ1IjoiZnJlZGNhbXBvczEyMzAiLCJhIjoiY2xudTl2d2VrMDlpbzJrcWpnYnJkc3JqbCJ9.hjid1kkpkU37wvVJrj2pQg"
 
         setContent {
-
-            // ---------- TEMA DE LA APP ----------
             PasteleriaMilSaboresTheme {
 
                 LaunchedEffect(Unit) {

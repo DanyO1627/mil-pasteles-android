@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.productos.viewmodel.CarritoViewModel
 import com.example.productos.viewmodel.ProductoViewModel
 import kotlinx.coroutines.launch
@@ -117,7 +119,10 @@ fun ScreenProductos(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(productosFiltrados) { producto ->
+                items(
+                    items = productosFiltrados,
+                    key = { it.id!! }
+                ) { producto ->
                     ProductoItem(
                         producto = producto,
                         navController = navController,
@@ -163,7 +168,11 @@ fun ProductoItem(
 
             // IMAGEN DESDE URL (COIL)
             AsyncImage(
-                model = producto.imagenUrl,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(producto.imagenUrl)
+                    .crossfade(true)
+                    .size(300) //
+                    .build(),
                 contentDescription = producto.nombreProducto,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
