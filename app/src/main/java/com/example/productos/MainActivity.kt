@@ -26,12 +26,12 @@ class MainActivity : ComponentActivity() {
     // ViewModels
     private val productoViewModel: ProductoViewModel by viewModels()
 
-    // ✨ NUEVO: Crear repositorio para backend
+    // repositorio para el backend
     private val carritoRepository by lazy {
         CarritoRepository(RetrofitInstance.api)
     }
 
-    // 🔄 ACTUALIZADO: CarritoViewModel ahora usa el repositorio del backend
+    // carrito view model ahora con el backend
     private val carritoViewModel: CarritoViewModel by lazy {
         ViewModelProvider(
             this,
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // ✨ NUEVO: Observar errores del carrito y mostrarlos como Toast
+        // errores del carrito y mostrarlos como mensaje
         lifecycleScope.launch {
             carritoViewModel.error.collect { error ->
                 error?.let {

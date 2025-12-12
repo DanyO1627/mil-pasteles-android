@@ -26,6 +26,7 @@ import com.example.productos.screen.eve.LoginScreen
 import com.example.productos.screen.eve.PantallaTienda
 import com.example.productos.viewmodel.UsuarioViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.productos.viewmodel.CompraViewModel
 
 // aquí vive toddo lo relacionado con la navegacion (navcontroller, navhost, rutas, appnavhost,etc)
@@ -56,8 +57,13 @@ fun NavigationBarMain(
     modifier: Modifier = Modifier
 
 ) {
+
     val navController = rememberNavController()
-    var selectedDestination by rememberSaveable { mutableStateOf(Destination.PRODUCTOS) }
+    var selectedDestination by rememberSaveable { mutableStateOf(Destination.HOME) }
+
+    // esto es para que pesque el compose lo que le digo en el scaffold
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val compraViewModel: CompraViewModel = viewModel()
@@ -65,26 +71,29 @@ fun NavigationBarMain(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            NavigationBar {
-                Destination.values().forEach { destination ->
-                    NavigationBarItem(
-                        selected = selectedDestination == destination,
-                        onClick = {
-                            selectedDestination = destination
-                            navController.navigate(destination.route) {
-                                popUpTo(Destination.HOME.route) // esto es para que la pantalla en la que se inicia
-                                launchSingleTop = true              // sea home
-                            }
-                        },
-                        icon = {
-                            destination.iconVector?.let {
-                                Icon(imageVector = it, contentDescription = destination.contentDescription)
-                            } ?: destination.iconRes?.let {
-                                Icon(painter = painterResource(id = it), contentDescription = destination.contentDescription)
-                            }
-                        },
-                        label = { Text(destination.label) }
-                    )
+            // NO SE MUESTRA SI ESTAMOS EN LA PÁGINA DE BIENVENIDA
+            if (navController.currentBackStackEntry?.destination?.route != "bienvenida" && currentRoute != "login") {
+                NavigationBar {
+                    Destination.values().forEach { destination ->
+                        NavigationBarItem(
+                            selected = selectedDestination == destination,
+                            onClick = {
+                                selectedDestination = destination
+                                navController.navigate(destination.route) {
+                                    popUpTo(Destination.HOME.route) // Asegurar que inicia desde Home
+                                    launchSingleTop = true
+                                }
+                            },
+                            icon = {
+                                destination.iconVector?.let {
+                                    Icon(imageVector = it, contentDescription = destination.contentDescription)
+                                } ?: destination.iconRes?.let {
+                                    Icon(painter = painterResource(id = it), contentDescription = destination.contentDescription)
+                                }
+                            },
+                            label = { Text(destination.label) }
+                        )
+                    }
                 }
             }
         }
@@ -98,6 +107,7 @@ fun NavigationBarMain(
             modifier = Modifier.padding(innerPadding)
         )
     }
+
 }
 
 

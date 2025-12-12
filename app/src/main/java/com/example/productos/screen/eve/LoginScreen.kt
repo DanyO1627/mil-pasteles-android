@@ -47,7 +47,29 @@ fun LoginScreen(
             .background(RosaFondo)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+
+
+    {
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Button(
+                onClick = { navController.navigate("home") },
+                enabled = !cargando,
+                colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.height(34.dp)
+            ) {
+                Text("volver", color = Color.White, fontSize = 18.sp)
+            }
+        }
+
+
+
         Spacer(modifier = Modifier.height(40.dp))
 
         // Logo
@@ -109,11 +131,15 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 Botón con carga visible
+        // Botón con carga visible
         Button(
             onClick = {
                 if (email.isBlank() || password.isBlank()) {
-                    Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Por favor completa todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     cargando = true
 
@@ -124,12 +150,20 @@ fun LoginScreen(
                         val valido = usuarioViewModel.validarCredenciales(email, password)
 
                         if (valido) {
-                            Toast.makeText(context, "¡Inicio de sesión exitoso! 🎉", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "¡Inicio de sesión exitoso! 🎉",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             navController.navigate("home") {
                                 popUpTo("login") { inclusive = true }
                             }
                         } else {
-                            Toast.makeText(context, "Credenciales incorrectas ❌", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Credenciales incorrectas ❌",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
