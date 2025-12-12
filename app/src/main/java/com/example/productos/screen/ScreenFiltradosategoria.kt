@@ -40,11 +40,11 @@ fun ScreenProductosCategoria(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // Wrapper como en ScreenHome
-    fun agregarConStock(id: Int) {
-        val p = viewModel.obtenerProductoPorId(id) ?: return
+    fun agregarConStock(id: Long?) {
+        val idSafe = id ?: return
+        val p = viewModel.obtenerProductoPorId(idSafe) ?: return  // ✅ Pasar Long directamente
 
-        carritoViewModel.agregarAlCarrito(p.id.toLong(),1)
+        carritoViewModel.agregarAlCarrito(idSafe, 1)
 
         scope.launch {
             snackbarHostState.showSnackbar("Agregado al carrito 🛒")
@@ -97,7 +97,7 @@ fun ScreenProductosCategoria(
                             navController = navController,
                             viewModel = viewModel,
                             carritoViewModel = carritoViewModel,
-                            onAgregado = { agregarConStock(producto) }
+                            onAgregado = { agregarConStock(producto.id) }  // ✅ Pasar directamente el Long?
                         )
                     }
                 }
@@ -112,7 +112,7 @@ fun ProductoItemFiltrado(
     navController: NavController,
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel,
-    onAgregado: (Int) -> Unit
+    onAgregado: (Long?) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -167,7 +167,7 @@ fun ProductoItemFiltrado(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
-                    onClick = { onAgregado(producto.id) },
+                    onClick = { onAgregado(producto.id) },  // ✅ Pasar Long?
                     enabled = producto.stock > 0,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA6B8)),

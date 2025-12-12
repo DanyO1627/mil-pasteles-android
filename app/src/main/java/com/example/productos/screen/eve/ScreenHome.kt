@@ -25,7 +25,6 @@ import com.example.productos.R
 import com.example.productos.model.Producto
 import com.example.productos.ui.theme.*
 import com.example.productos.viewmodel.CarritoViewModel
-import androidx.compose.ui.text.style.TextOverflow
 import com.example.productos.ui.utils.formatearPrecio
 import com.example.productos.viewmodel.ProductoViewModel
 import kotlinx.coroutines.launch
@@ -47,9 +46,12 @@ fun PantallaTienda(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    fun agregarConStock(id: Int) {
-        val p = viewModel.obtenerProductoPorId(id) ?: return
-        carritoViewModel.agregarAlCarrito(p.id.toLong(),1)
+    fun agregarConStock(id: Long?) {
+        val idSafe = id ?: return
+        val p = viewModel.obtenerProductoPorId(idSafe) ?: return  // ✅ Pasar Long directamente
+
+        carritoViewModel.agregarAlCarrito(idSafe, 1)
+
         scope.launch {
             snackbarHostState.showSnackbar("Agregado al carrito 🛒")
         }
@@ -101,7 +103,7 @@ fun PantallaTienda(
                             navController = navController,
                             viewModel = viewModel,
                             carritoViewModel = carritoViewModel,
-                            onAgregado = { agregarConStock(producto.id ?: 0L) }
+                            onAgregado = { agregarConStock(producto.id) }
                         )
                     }
 
@@ -232,7 +234,7 @@ fun ProductoItemHome(
     navController: NavHostController,
     viewModel: ProductoViewModel,
     carritoViewModel: CarritoViewModel,
-    onAgregado: (Int) -> Unit
+    onAgregado: (Long?) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -285,7 +287,7 @@ fun ProductoItemHome(
             )
 
             Button(
-                onClick = onAgregado,
+                onClick = { onAgregado(producto.id) },
                 enabled = producto.stock > 0,
                 modifier = Modifier.fillMaxWidth()
             ) {

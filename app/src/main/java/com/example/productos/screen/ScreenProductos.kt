@@ -202,7 +202,7 @@ fun ProductoItem(
 
                     Button(
                         onClick = {
-                            carritoViewModel.agregarAlCarrito(producto.id.toLong(),1)
+                            carritoViewModel.agregarAlCarrito(producto.id?:0L,1)
                             onAgregado()
                         },
                         enabled = producto.stock > 0,

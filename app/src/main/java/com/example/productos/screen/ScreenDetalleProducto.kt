@@ -34,6 +34,7 @@ import com.example.productos.ui.utils.vibrarFuerte
 import com.example.productos.ui.utils.vibrarSuave
 import com.example.productos.viewmodel.ProductoViewModel
 import com.example.productos.viewmodel.CarritoViewModel
+import com.example.productos.model.Producto
 import kotlinx.coroutines.launch
 
 
@@ -105,7 +106,7 @@ fun ScreenDetalleProducto(
 
             Button(
                 onClick = {
-                    vibrarFuerte()
+                    vibrarFuerte(context)
 
                     // animación botón
                     scale = 0.9f
@@ -116,7 +117,7 @@ fun ScreenDetalleProducto(
 
                     // agregar al carrito
                     repeat(cantidad) {
-                        carritoViewModel.agregarAlCarrito(producto)
+                        carritoViewModel.agregarAlCarrito(producto.id?:0L,1)
                     }
 
                     // recargar el mismo producto desde backend
