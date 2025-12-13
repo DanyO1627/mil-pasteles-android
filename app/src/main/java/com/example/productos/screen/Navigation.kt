@@ -1,13 +1,13 @@
 package com.example.productos.screen
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-//import com.example.productos.model.Producto AHORA USO DATA
 import com.example.productos.viewmodel.ProductoViewModel
 import com.example.productos.R
 import androidx.compose.material.icons.Icons
@@ -17,16 +17,13 @@ import androidx.compose.ui.res.painterResource
 import com.example.productos.viewmodel.CarritoViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import com.example.productos.screen.eve.BienvenidaScreen
 import com.example.productos.screen.eve.LoginScreen
 import com.example.productos.screen.eve.PantallaTienda
 import com.example.productos.viewmodel.UsuarioViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.productos.viewmodel.CompraViewModel
+import com.example.productos.screen.eve.ScreenRegistroUsuario
 
 // aquí vive toddo lo relacionado con la navegacion (navcontroller, navhost, rutas, appnavhost,etc)
 // y así aliviamos nuestras otras pantallas
@@ -103,7 +100,6 @@ fun NavigationBarMain(
 
 // MAPA DE RUTAS
 // (con animaciones entre cambios de pantalla)
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -113,15 +109,14 @@ fun AppNavHost(
     compraViewModel: CompraViewModel,
     modifier: Modifier = Modifier
 ) {
-    AnimatedNavHost(
+    NavHost(  // CAMBIA AnimatedNavHost por NavHost
         navController = navController,
         startDestination = "bienvenida",
-        modifier = modifier,
-        enterTransition = { fadeIn(animationSpec = tween(400)) },
-        exitTransition = { fadeOut(animationSpec = tween(300)) }
+        modifier = modifier
+        // ELIMINA las animaciones por ahora para que compile
+        // enterTransition = { fadeIn(animationSpec = tween(400)) },
+        // exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
-
-
 
         composable("bienvenida") {
             BienvenidaScreen(navController)
@@ -217,4 +212,3 @@ fun AppNavHost(
         }
     }
 }
-

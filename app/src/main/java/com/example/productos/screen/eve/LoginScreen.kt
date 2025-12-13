@@ -5,8 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,21 +13,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.productos.R
-import com.example.productos.ui.theme.*
 import com.example.productos.viewmodel.UsuarioViewModel
-import kotlinx.coroutines.*
+
+//  Colores estilo Pastelería
+val RosaFondo = Color(0xFFFFF4F7)
+val RosaBoton = Color(0xFFB9405A)
+val CafeTexto = Color(0xFF4A2C2A)
 
 @Composable
 fun LoginScreen(
@@ -37,8 +37,10 @@ fun LoginScreen(
     usuarioViewModel: UsuarioViewModel
 ) {
     val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var clave by remember { mutableStateOf("") }
+
     var cargando by remember { mutableStateOf(false) }
 
     Column(
@@ -48,133 +50,107 @@ fun LoginScreen(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(45.dp))
 
-        // Logo
+        //  Logo
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo Pastelería",
-            modifier = Modifier
-                .size(180.dp)
-                .padding(bottom = 16.dp)
+            modifier = Modifier.size(180.dp)
         )
 
-        // Título
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Iniciar sesión",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = CafeTexto,
-            modifier = Modifier.padding(bottom = 24.dp)
+            color = CafeTexto
         )
 
-        // Campo Email
+        Spacer(modifier = Modifier.height(30.dp))
+
+        // EMAIL
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Nombre o correo electrónico") },
-            placeholder = { Text("Correo o usuario") },
+            label = { Text("Correo electrónico") },
+            placeholder = { Text("ejemplo@mail.cl") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = RosaBoton,
-                unfocusedBorderColor = Color.LightGray,
-                cursorColor = CafeTexto
-            ),
-            textStyle = TextStyle(color = CafeTexto, fontSize = 16.sp)
-        )
-
-        // Campo Contraseña
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            shape = RoundedCornerShape(12.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = RosaBoton,
-                unfocusedBorderColor = Color.LightGray,
-                cursorColor = CafeTexto
-            ),
-            textStyle = TextStyle(color = CafeTexto, fontSize = 16.sp)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 Botón con carga visible
+        //  CONTRASEÑA
+        OutlinedTextField(
+            value = clave,
+            onValueChange = { clave = it },
+            label = { Text("Contraseña") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
+        )
+
+        Spacer(modifier = Modifier.height(22.dp))
+
+        //  BOTÓN DE INGRESAR
         Button(
             onClick = {
-                if (email.isBlank() || password.isBlank()) {
-                    Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
+                if (email.isBlank() || clave.isBlank()) {
+                    Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
                 } else {
                     cargando = true
 
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(1300)
+                    usuarioViewModel.login(email, clave) { ok ->
                         cargando = false
 
-                        val valido = usuarioViewModel.validarCredenciales(email, password)
-
-                        if (valido) {
-                            Toast.makeText(context, "¡Inicio de sesión exitoso! 🎉", Toast.LENGTH_SHORT).show()
+                        if (ok) {
+                            Toast.makeText(context, "Bienvenido(a) 🎉", Toast.LENGTH_SHORT).show()
                             navController.navigate("home") {
                                 popUpTo("login") { inclusive = true }
                             }
                         } else {
-                            Toast.makeText(context, "Credenciales incorrectas ❌", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Correo o contraseña incorrecta ❌", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             },
             enabled = !cargando,
-            colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
-            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(55.dp)
+                .height(55.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = RosaBoton)
         ) {
             if (cargando) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(22.dp)
-                            .padding(end = 8.dp),
-                        color = Color.White,
-                        strokeWidth = 3.dp
-                    )
-                    Text("Cargando...", color = Color.White, fontSize = 18.sp)
-                }
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(22.dp),
+                    strokeWidth = 3.dp
+                )
             } else {
                 Text("Entrar", color = Color.White, fontSize = 18.sp)
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // Texto de registro
+        //  ENLACE A REGISTRO
         Text(
             buildAnnotatedString {
-                append("¿No tienes cuenta? ")
+                append("¿No tienes una cuenta? ")
                 withStyle(style = SpanStyle(color = RosaBoton, fontWeight = FontWeight.Bold)) {
                     append("Regístrate")
                 }
             },
-            fontSize = 15.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier.clickable {
                 navController.navigate("registroUsuario")
-            }
+            },
+            fontSize = 15.sp
         )
     }
 }

@@ -117,3 +117,5 @@ fun CategoriaCard(categoria: Categoria, onClick: () -> Unit) {
         }
     }
 }
+
+
