@@ -1,4 +1,3 @@
-
 // qué hace el código:
 //Lee el producto seleccionado desde el ViewModel
 //Muestra su imagen, nombre, precio y descripción

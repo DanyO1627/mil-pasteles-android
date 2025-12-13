@@ -12,6 +12,5 @@ data class BoletaData(
     val items: List<CarritoItem>,
     val subtotal: Int,
     val envio: Int,
-    val total: Int,
-
+    val total: Int
 )

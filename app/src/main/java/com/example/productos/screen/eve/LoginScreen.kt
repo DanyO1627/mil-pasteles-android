@@ -31,14 +31,19 @@ import com.example.productos.ui.theme.*
 import com.example.productos.viewmodel.UsuarioViewModel
 import kotlinx.coroutines.*
 
+val RosaFondo = Color(0xFFFFF4F7)
+val RosaBoton = Color(0xFFB9405A)
+val CafeTexto = Color(0xFF4A2C2A)
+
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     usuarioViewModel: UsuarioViewModel
 ) {
     val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var clave by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
     Column(
@@ -47,121 +52,80 @@ fun LoginScreen(
             .background(RosaFondo)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    )
+    ) {
+        Spacer(modifier = Modifier.height(45.dp))
 
-
-    {
-
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Button(
-                onClick = { navController.navigate("home") },
-                enabled = !cargando,
-                colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.height(34.dp)
-            ) {
-                Text("volver", color = Color.White, fontSize = 18.sp)
-            }
-        }
-
-
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // Logo
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo Pastelería",
-            modifier = Modifier
-                .size(180.dp)
-                .padding(bottom = 16.dp)
+            modifier = Modifier.size(180.dp)
         )
 
-        // Título
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Iniciar sesión",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = CafeTexto,
-            modifier = Modifier.padding(bottom = 24.dp)
+            color = CafeTexto
         )
 
-        // Campo Email
+        Spacer(modifier = Modifier.height(30.dp))
+
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Nombre o correo electrónico") },
-            placeholder = { Text("Correo o usuario") },
+            label = { Text("Correo electrónico") },
+            placeholder = { Text("ejemplo@mail.cl") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = RosaBoton,
-                unfocusedBorderColor = Color.LightGray,
-                cursorColor = CafeTexto
-            ),
-            textStyle = TextStyle(color = CafeTexto, fontSize = 16.sp)
-        )
-
-        // Campo Contraseña
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            shape = RoundedCornerShape(12.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = RosaBoton,
-                unfocusedBorderColor = Color.LightGray,
-                cursorColor = CafeTexto
-            ),
-            textStyle = TextStyle(color = CafeTexto, fontSize = 16.sp)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón con carga visible
+        OutlinedTextField(
+            value = clave,
+            onValueChange = { clave = it },
+            label = { Text("Contraseña") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
+        )
+
+        Spacer(modifier = Modifier.height(22.dp))
+
         Button(
             onClick = {
-                if (email.isBlank() || password.isBlank()) {
+                if (email.isBlank() || clave.isBlank()) {
                     Toast.makeText(
                         context,
-                        "Por favor completa todos los campos",
+                        "Completa todos los campos",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
                     cargando = true
 
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(1300)
+                    usuarioViewModel.login(email, clave) { valido ->
                         cargando = false
-
-                        val valido = usuarioViewModel.validarCredenciales(email, password)
 
                         if (valido) {
                             Toast.makeText(
                                 context,
-                                "¡Inicio de sesión exitoso! 🎉",
+                                "Bienvenido(a) 🎉",
                                 Toast.LENGTH_SHORT
                             ).show()
+
                             navController.navigate("home") {
                                 popUpTo("login") { inclusive = true }
                             }
                         } else {
                             Toast.makeText(
                                 context,
-                                "Credenciales incorrectas ❌",
+                                "Correo o contraseña incorrecta",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -169,46 +133,42 @@ fun LoginScreen(
                 }
             },
             enabled = !cargando,
-            colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
-            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(55.dp)
+                .height(55.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = RosaBoton
+            )
         ) {
             if (cargando) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(22.dp)
-                            .padding(end = 8.dp),
-                        color = Color.White,
-                        strokeWidth = 3.dp
-                    )
-                    Text("Cargando...", color = Color.White, fontSize = 18.sp)
-                }
+                CircularProgressIndicator(
+                    color = Color.White,
+                    strokeWidth = 3.dp,
+                    modifier = Modifier.size(22.dp)
+                )
             } else {
-                Text("Entrar", color = Color.White, fontSize = 18.sp)
+                Text(
+                    text = "Entrar",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // Texto de registro
         Text(
             buildAnnotatedString {
-                append("¿No tienes cuenta? ")
+                append("¿No tienes una cuenta? ")
                 withStyle(style = SpanStyle(color = RosaBoton, fontWeight = FontWeight.Bold)) {
                     append("Regístrate")
                 }
             },
-            fontSize = 15.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier.clickable {
                 navController.navigate("registroUsuario")
-            }
+            },
+            fontSize = 15.sp
         )
     }
 }

@@ -28,7 +28,7 @@ import com.example.productos.viewmodel.UsuarioViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.productos.viewmodel.CompraViewModel
-
+import com.example.productos.screen.eve.ScreenRegistroUsuario
 // aquí vive toddo lo relacionado con la navegacion (navcontroller, navhost, rutas, appnavhost,etc)
 // y así aliviamos nuestras otras pantallas
 
@@ -219,9 +219,7 @@ fun AppNavHost(
             route = "productos/{categoriaNombre}",
             arguments = listOf(navArgument("categoriaNombre") { type = NavType.StringType })
         ) { backStackEntry ->
-
             val categoriaNombre = backStackEntry.arguments?.getString("categoriaNombre") ?: ""
-
             ScreenProductosCategoria(
                 navController = navController,
                 viewModel = viewModel,
@@ -229,7 +227,5 @@ fun AppNavHost(
                 categoriaNombre = categoriaNombre
             )
         }
-
     }
 }
-

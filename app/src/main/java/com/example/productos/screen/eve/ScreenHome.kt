@@ -241,7 +241,6 @@ fun ProductoItemHome(
             .fillMaxWidth()
             .height(320.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC1CC))
     ) {
         Column(

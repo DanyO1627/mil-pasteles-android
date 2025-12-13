@@ -506,7 +506,6 @@ fun ResumenCard(
     }
 }
 
-// ✅ CAMBIO: Usar AsyncImage en vez de painterResource
 @Composable
 private fun PedidoItemRow(item: CarritoItem) {
     Row(
@@ -535,7 +534,6 @@ private fun PedidoItemRow(item: CarritoItem) {
     }
 }
 
-// ✅ MANTENER: formatearPrecio solo con Int
 private fun formatearPrecio(monto: Int): String {
     if (monto <= 0) return "$0"
     val conPuntos = "%,d".format(monto).replace(',', '.')
