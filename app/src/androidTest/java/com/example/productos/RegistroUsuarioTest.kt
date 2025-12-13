@@ -27,7 +27,6 @@ class RegistroUsuarioTest {
             )
         }
 
-        // ✅ Cambia estos textos por los EXACTOS que ves en tu UI
         composeRule.onNodeWithText("Nombre").assertIsDisplayed()
         composeRule.onNodeWithText("Correo electrónico").assertIsDisplayed()
         composeRule.onNodeWithText("Contraseña").assertIsDisplayed()
