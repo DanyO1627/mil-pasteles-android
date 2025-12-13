@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
-// 🌎 LISTA COMPLETA DE REGIONES Y COMUNAS DE CHILE
+//  LISTA COMPLETA DE REGIONES Y COMUNAS DE CHILE
 val regiones = listOf(
     "Arica y Parinacota", "Tarapacá", "Antofagasta", "Atacama", "Coquimbo",
     "Valparaíso", "Región Metropolitana", "O'Higgins", "Maule", "Ñuble",
@@ -124,7 +124,7 @@ val comunas = mapOf(
 )
 
 
-// 🌸 PANTALLA COMPLETA DE REGISTRO
+//  PANTALLA COMPLETA DE REGISTRO
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenRegistroUsuario(

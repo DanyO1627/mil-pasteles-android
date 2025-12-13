@@ -26,7 +26,7 @@ import androidx.navigation.NavHostController
 import com.example.productos.R
 import com.example.productos.viewmodel.UsuarioViewModel
 
-// 🎨 Colores estilo Pastelería
+//  Colores estilo Pastelería
 val RosaFondo = Color(0xFFFFF4F7)
 val RosaBoton = Color(0xFFB9405A)
 val CafeTexto = Color(0xFF4A2C2A)
@@ -52,7 +52,7 @@ fun LoginScreen(
     ) {
         Spacer(modifier = Modifier.height(45.dp))
 
-        // 🧁 Logo
+        //  Logo
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo Pastelería",
@@ -70,7 +70,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // 📧 EMAIL
+        // EMAIL
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -84,7 +84,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔒 CONTRASEÑA
+        //  CONTRASEÑA
         OutlinedTextField(
             value = clave,
             onValueChange = { clave = it },
@@ -98,7 +98,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        // 🔘 BOTÓN DE INGRESAR
+        //  BOTÓN DE INGRESAR
         Button(
             onClick = {
                 if (email.isBlank() || clave.isBlank()) {
@@ -139,7 +139,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        // 🔗 ENLACE A REGISTRO
+        //  ENLACE A REGISTRO
         Text(
             buildAnnotatedString {
                 append("¿No tienes una cuenta? ")

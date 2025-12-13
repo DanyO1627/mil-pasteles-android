@@ -74,7 +74,7 @@ fun BienvenidaScreen(navController: NavHostController)
                 .widthIn(min = 220.dp)
         ) {
             Text(
-                text = "🍰 Entrar a la dulzura",
+                text = " Entrar a la dulzura",
                 color = Color.White,
                 fontSize = 16.sp
             )
