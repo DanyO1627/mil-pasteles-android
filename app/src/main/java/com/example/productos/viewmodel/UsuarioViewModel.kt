@@ -10,9 +10,7 @@ class UsuarioViewModel : ViewModel() {
 
     private val repoUsuarios = RepositorioUsuarios()
 
-    // -----------------------------
-    // LOGIN REAL (con backend actual)
-    // -----------------------------
+    // LOGIN
     fun login(
         email: String,
         claveIngresada: String,
@@ -24,11 +22,7 @@ class UsuarioViewModel : ViewModel() {
 
                 if (response.isSuccessful) {
                     val usuario = response.body()
-
-                    // Validación real
-                    val loginValido =
-                        usuario != null && usuario.clave == claveIngresada
-
+                    val loginValido = usuario != null && usuario.clave == claveIngresada
                     callback(loginValido)
                 } else {
                     callback(false)
@@ -40,9 +34,7 @@ class UsuarioViewModel : ViewModel() {
         }
     }
 
-    // -----------------------------
     // REGISTRO
-    // -----------------------------
     fun registrarUsuario(
         nombre: String,
         email: String,
@@ -54,6 +46,7 @@ class UsuarioViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val usuario = UsuarioEntity(
+                    id = null,
                     nombre = nombre,
                     email = email,
                     clave = clave,

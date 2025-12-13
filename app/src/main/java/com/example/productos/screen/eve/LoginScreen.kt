@@ -17,7 +17,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
-
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -26,7 +25,6 @@ import androidx.navigation.NavHostController
 import com.example.productos.R
 import com.example.productos.viewmodel.UsuarioViewModel
 
-//  Colores estilo Pastelería
 val RosaFondo = Color(0xFFFFF4F7)
 val RosaBoton = Color(0xFFB9405A)
 val CafeTexto = Color(0xFF4A2C2A)
@@ -40,7 +38,6 @@ fun LoginScreen(
 
     var email by remember { mutableStateOf("") }
     var clave by remember { mutableStateOf("") }
-
     var cargando by remember { mutableStateOf(false) }
 
     Column(
@@ -52,7 +49,6 @@ fun LoginScreen(
     ) {
         Spacer(modifier = Modifier.height(45.dp))
 
-        //  Logo
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo Pastelería",
@@ -70,7 +66,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // EMAIL
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -84,7 +79,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //  CONTRASEÑA
         OutlinedTextField(
             value = clave,
             onValueChange = { clave = it },
@@ -98,7 +92,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        //  BOTÓN DE INGRESAR
         Button(
             onClick = {
                 if (email.isBlank() || clave.isBlank()) {
@@ -126,7 +119,7 @@ fun LoginScreen(
                         } else {
                             Toast.makeText(
                                 context,
-                                "Correo o contraseña incorrecta ",
+                                "Correo o contraseña incorrecta",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -159,7 +152,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        //  ENLACE A REGISTRO
         Text(
             buildAnnotatedString {
                 append("¿No tienes una cuenta? ")
