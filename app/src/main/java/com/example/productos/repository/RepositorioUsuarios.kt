@@ -1,16 +1,14 @@
 package com.example.productos.repository
 
 import com.example.productos.remote.RetrofitUsuario
-import com.example.productos.data.UsuarioEntity
-import retrofit2.Response
+import com.example.productos.remote.ApiServiceUsuarios
+
 
 class RepositorioUsuarios {
 
-    private val api = RetrofitUsuario.apiUsuarios
+    suspend fun obtenerUsuarioPorEmail(email: String)
+            = RetrofitInstance.api.obtenerUsuarioPorEmail(email)
 
-    suspend fun registrarUsuario(usuario: UsuarioEntity): Response<UsuarioEntity> {
-        return api.registrarUsuario(usuario)
-    }
-
-    suspend fun listarUsuarios() = api.listarUsuarios()
+    suspend fun registrarUsuario(usuario: UsuarioEntity)
+            = RetrofitInstance.api.registrarUsuario(usuario)
 }

@@ -102,20 +102,33 @@ fun LoginScreen(
         Button(
             onClick = {
                 if (email.isBlank() || clave.isBlank()) {
-                    Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Completa todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     cargando = true
 
-                    usuarioViewModel.login(email, clave) { ok ->
+                    usuarioViewModel.login(email, clave) { valido ->
                         cargando = false
 
-                        if (ok) {
-                            Toast.makeText(context, "Bienvenido(a) 🎉", Toast.LENGTH_SHORT).show()
+                        if (valido) {
+                            Toast.makeText(
+                                context,
+                                "Bienvenido(a) 🎉",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
                             navController.navigate("home") {
                                 popUpTo("login") { inclusive = true }
                             }
                         } else {
-                            Toast.makeText(context, "Correo o contraseña incorrecta ❌", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Correo o contraseña incorrecta ",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -124,16 +137,23 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = RosaBoton)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = RosaBoton
+            )
         ) {
             if (cargando) {
                 CircularProgressIndicator(
                     color = Color.White,
-                    modifier = Modifier.size(22.dp),
-                    strokeWidth = 3.dp
+                    strokeWidth = 3.dp,
+                    modifier = Modifier.size(22.dp)
                 )
             } else {
-                Text("Entrar", color = Color.White, fontSize = 18.sp)
+                Text(
+                    text = "Entrar",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
