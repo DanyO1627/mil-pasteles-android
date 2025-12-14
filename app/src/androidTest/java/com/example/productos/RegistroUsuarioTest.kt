@@ -3,12 +3,13 @@ package com.example.productos
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.productos.screen.eve.ScreenRegistroUsuario
 import com.example.productos.viewmodel.UsuarioViewModel
 import org.junit.Rule
 import org.junit.Test
-
+import io.mockk.mockk
 class RegistroUsuarioTest {
 
     @get:Rule
@@ -16,23 +17,21 @@ class RegistroUsuarioTest {
 
     @Test
     fun registro_muestra_campos_principales() {
+        val navController = mockk<NavController>(relaxed = true)
+        val usuarioViewModel = mockk<UsuarioViewModel>(relaxed = true)
 
         composeRule.setContent {
-            val navController = rememberNavController()
-            val usuarioViewModel = UsuarioViewModel()
-
             ScreenRegistroUsuario(
                 navController = navController,
                 usuarioViewModel = usuarioViewModel
             )
         }
 
+        composeRule.onNodeWithText("Registro de Usuario").assertIsDisplayed()
         composeRule.onNodeWithText("Nombre").assertIsDisplayed()
-        composeRule.onNodeWithText("Correo electrónico").assertIsDisplayed()
+        composeRule.onNodeWithText("Correo").assertIsDisplayed()
         composeRule.onNodeWithText("Contraseña").assertIsDisplayed()
-
-        // Botón
-        composeRule.onNodeWithText("Registrarse").assertIsDisplayed()
-        // o si tu botón dice "Registrar" / "Crear cuenta", usa ese texto exacto
+        composeRule.onNodeWithText("Confirmar contraseña").assertIsDisplayed()
+        composeRule.onNodeWithText("Registrar").assertIsDisplayed()
     }
 }

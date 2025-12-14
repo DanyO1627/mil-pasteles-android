@@ -8,38 +8,28 @@ import com.example.productos.screen.eve.LoginScreen
 import com.example.productos.viewmodel.UsuarioViewModel
 import org.junit.Rule
 import org.junit.Test
-
+import androidx.navigation.NavHostController
+import io.mockk.mockk
 class LoginScreenTest {
 
     @get:Rule
     val composeRule = createComposeRule()
 
     @Test
-    fun login_muestra_campos_y_boton() {
+    fun login_muestra_textos_principales() {
+        val navController = mockk<NavHostController>(relaxed = true)
+        val usuarioViewModel = mockk<UsuarioViewModel>(relaxed = true)
 
         composeRule.setContent {
-            val navController = rememberNavController()
-            val usuarioViewModel = UsuarioViewModel()
-
             LoginScreen(
                 navController = navController,
                 usuarioViewModel = usuarioViewModel
             )
         }
 
-        // Campo email (label)
-        composeRule
-            .onNodeWithText("Correo electrónico")
-            .assertIsDisplayed()
-
-        // Campo contraseña (label)
-        composeRule
-            .onNodeWithText("Contraseña")
-            .assertIsDisplayed()
-
-        // Botón
-        composeRule
-            .onNodeWithText("Entrar")
-            .assertIsDisplayed()
+        composeRule.onNodeWithText("Iniciar sesión").assertIsDisplayed()
+        composeRule.onNodeWithText("Correo electrónico").assertIsDisplayed()
+        composeRule.onNodeWithText("Contraseña").assertIsDisplayed()
+        composeRule.onNodeWithText("Entrar").assertIsDisplayed()
     }
 }
