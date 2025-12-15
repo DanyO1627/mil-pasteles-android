@@ -6,17 +6,8 @@ import com.example.productos.model.Producto
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert
 import org.junit.Test
-
-
-// PRUEBA 3 CON MOCK
-
-
-// prueba que el Repository obtenga productos correctamente usando un mock de la API
-// el mock es para que simule la api sin tener backend real
-// * Simula la API sin necesidad de backend real
 
 class TestProductoRepository {
 
@@ -53,10 +44,10 @@ class TestProductoRepository {
         val resultado = repository.getAll()
 
         // Assert: se verifica que devuelva los productos correctos
-        assertEquals(2, resultado.size)
-        assertEquals("Torta Tres Leches", resultado[0].nombreProducto)
-        assertEquals(15000.0, resultado[0].precio, 0.01)
-        assertEquals("Cheesecake de Frutilla", resultado[1].nombreProducto)
+        Assert.assertEquals(2, resultado.size)
+        Assert.assertEquals("Torta Tres Leches", resultado[0].nombreProducto)
+        Assert.assertEquals(15000.0, resultado[0].precio, 0.01)
+        Assert.assertEquals("Cheesecake de Frutilla", resultado[1].nombreProducto)
     }
 
     @Test
@@ -79,9 +70,9 @@ class TestProductoRepository {
         val resultado = repository.getById(5L)
 
         // Assert
-        assertNotNull(resultado)
-        assertEquals(5L, resultado.id)
-        assertEquals("Brownie de Chocolate", resultado.nombreProducto)
-        assertEquals(8000.0, resultado.precio, 0.01)
+        Assert.assertNotNull(resultado)
+        Assert.assertEquals(5L, resultado.id)
+        Assert.assertEquals("Brownie de Chocolate", resultado.nombreProducto)
+        Assert.assertEquals(8000.0, resultado.precio, 0.01)
     }
 }

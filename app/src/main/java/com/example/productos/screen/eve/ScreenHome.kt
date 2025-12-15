@@ -175,11 +175,13 @@ fun Encabezado(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Contáctanos",
-                color = CafeTexto,
-                modifier = Modifier.clickable { navController.navigate("contacto") }
-            )
+            Button(
+                onClick = { navController.navigate("contacto") },
+                colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Contáctanos", color = Color.White)
+            }
         }
     }
 }
@@ -288,7 +290,10 @@ fun ProductoItemHome(
             Button(
                 onClick = { onAgregado(producto.id) },
                 enabled = producto.stock > 0,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (producto.stock > 0) Color(0xFF592D2D) else Color.LightGray,
+                    contentColor = Color.White)
             ) {
                 Text(if (producto.stock > 0) "Agregar 🛒" else "Sin stock")
             }
