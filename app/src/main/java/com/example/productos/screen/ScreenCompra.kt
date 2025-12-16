@@ -172,7 +172,6 @@ fun ScreenCompra(
 
 
 
-    // ✅ CAMBIO: Convertir a Int
     val subtotal = lista.sumOf { (it.precio * it.cantidad).toInt() }
     val envio = when {
         region.isBlank() -> 0
