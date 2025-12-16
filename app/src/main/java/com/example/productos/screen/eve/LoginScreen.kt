@@ -31,9 +31,9 @@ import com.example.productos.ui.theme.*
 import com.example.productos.viewmodel.UsuarioViewModel
 import kotlinx.coroutines.*
 
-val RosaFondo = Color(0xFFFFF4F7)
-val RosaBoton = Color(0xFFB9405A)
-val CafeTexto = Color(0xFF4A2C2A)
+val RosaFondo = Color(0xFFFFE8EC)
+val RosaBoton = Color(0xFFF8A6A1)
+val CafeTexto = Color(0xFFC26857)
 
 @Composable
 fun LoginScreen(

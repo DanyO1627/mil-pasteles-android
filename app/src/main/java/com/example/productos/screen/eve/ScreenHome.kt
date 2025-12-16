@@ -39,6 +39,10 @@ fun PantallaTienda(
     // 👉 ESTE SÍ EXISTE EN TU VIEWMODEL
     val listaProductos by viewModel.productos.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
+
     // Destacados (IDs Long)
     val destacadosIds = listOf(15L, 13L, 1L, 24L, 17L, 16L, 2L, 27L, 3L, 34L)
     val productosDestacados = listaProductos.filter { (it.id ?: 0L) in destacadosIds }
@@ -150,41 +154,56 @@ fun Encabezado(navController: NavHostController) {
         }
 
         Spacer(modifier = Modifier.height(4.dp))
-
-        // Registro / Login
-        Row(
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(90.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ){ Card(
+            modifier = Modifier
+                .width(200.dp)
+                .height(40.dp)
+                .padding(top = 12.dp)
+                .align(Alignment.CenterHorizontally),
+                shape = MaterialTheme.shapes.medium,
+                colors = CardDefaults.cardColors(containerColor = RosaBoton),
+                elevation = CardDefaults.cardElevation(8.dp))
+        {
+            Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Registro",
-                color = CafeTexto,
-                modifier = Modifier.clickable { navController.navigate("registroUsuario") }
-            )
-            Text(" / ", color = CafeTexto)
-            Text(
-                text = "Iniciar sesión",
-                color = CafeTexto,
-                modifier = Modifier.clickable { navController.navigate("login") }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { navController.navigate("contacto") },
-                colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
-                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Contáctanos", color = Color.White)
-            }
+                Text(
+                    text = "Registro",
+                    color = Color.White,
+                    modifier = Modifier.clickable { navController.navigate("registroUsuario") }
+                )
+                Text(" / ", color = CafeTexto)
+                Text(
+                    text = "Iniciar sesión",
+                    color = Color.White,
+                    modifier = Modifier.clickable { navController.navigate("login") }
+                )
+            }}
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { navController.navigate("contacto") },
+                    colors = ButtonDefaults.buttonColors(containerColor = RosaBoton),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Contáctanos", color = Color.White)
+                }
+            }}
         }
     }
-}
 
 
 @Composable
