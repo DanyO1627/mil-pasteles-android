@@ -5,16 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TestProductoRepository">
+      <SelectionState runConfigName="producto_disminuyeStock_correctamente()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ProductoViewModelTest">
+      <SelectionState runConfigName="detalleProducto_muestraNombreCorrectamente()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CarritoRepositoryTest">
+      <SelectionState runConfigName="detalleProducto_muestraPrecio()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="crearCarrito_devuelve_failure_cuando_hay_excepción_de_red()">
+      <SelectionState runConfigName="TestBotonAgregar">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="botonSinStock_esVisible()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

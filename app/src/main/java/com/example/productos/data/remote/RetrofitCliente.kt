@@ -8,10 +8,10 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitCliente {
 
-    // ✅ Puerto 8011 + /api/ al final
+    // Puerto 8011 + /api/ al final
     private const val BASE_URL = "http://10.0.2.2:8011/api/"
 
-    // ✅ Cliente HTTP con logs y timeouts largos
+    // Cliente HTTP con logs y timeouts largos
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

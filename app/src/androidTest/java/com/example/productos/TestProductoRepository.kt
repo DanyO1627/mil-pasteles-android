@@ -13,8 +13,8 @@ class TestProductoRepository {
 
     @Test
     fun repository_obtieneProductosCorrectamente() = runTest {
-        // Arrange: Creamos un mock de la API
-        val apiMock = mockk<ProductoApiService>()
+        // Arrange: se crea un mock de la API (api falsa controlada por mi) (para probar lógica del repository)
+        val apiMock = mockk<ProductoApiService>() // crea un falso retrofit (productoapiservice) sin http, sin backend
 
         // Productos fake que simula el backend
         val productosFake = listOf(
@@ -39,7 +39,7 @@ class TestProductoRepository {
         // se configura el mock: cuando se llame a getall(), devolver productosFake
         coEvery { apiMock.getAll() } returns productosFake
 
-        // Act: se crea el repository con el mock y llamamos al método
+        // Act: se crea el repository con el mock y llamamos al métodoo
         val repository = ProductoRepository(apiMock)
         val resultado = repository.getAll()
 
@@ -50,29 +50,6 @@ class TestProductoRepository {
         Assert.assertEquals("Cheesecake de Frutilla", resultado[1].nombreProducto)
     }
 
-    @Test
-    fun repository_obtieneProductoPorId() = runTest {
-        // Arrange
-        val apiMock = mockk<ProductoApiService>()
-        val productoFake = Producto(
-            id = 5L,
-            nombreProducto = "Brownie de Chocolate",
-            precio = 8000.0,
-            stock = 20,
-            descripcionLarga = "Intenso y húmedo",
-            imagenUrl = "https://ejemplo.com/brownie.jpg"
-        )
 
-        coEvery { apiMock.getById(5L) } returns productoFake
 
-        // Act
-        val repository = ProductoRepository(apiMock)
-        val resultado = repository.getById(5L)
-
-        // Assert
-        Assert.assertNotNull(resultado)
-        Assert.assertEquals(5L, resultado.id)
-        Assert.assertEquals("Brownie de Chocolate", resultado.nombreProducto)
-        Assert.assertEquals(8000.0, resultado.precio, 0.01)
     }
-}

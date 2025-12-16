@@ -30,6 +30,9 @@ class TestDetalleNombre {
             Text(text = nombreProducto)
         }
 
+        // Pausa antes de hacer la verificación
+        composeTestRule.waitForIdle()
+
         // Assert: Verificamos que el texto se muestre en pantalla
         composeTestRule
             .onNodeWithText("Torta Tres Leches")
